@@ -100,7 +100,7 @@ namespace WeddingPlanner
             secondChild = new SeatingConfiguration(tablesSecond, secondChildPermutation);
         }
 
-        private Person[] 
+        //private Person[] 
 
         /// <summary>
         /// Order1s the crossover.
