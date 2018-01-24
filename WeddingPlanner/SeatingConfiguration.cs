@@ -43,7 +43,7 @@ namespace WeddingPlanner
         /// <param name="guests">Guests.</param>
         public SeatingConfiguration(List<Table> tables, Person[] guests)
         {
-            this.Tables = tables;
+            this.Tables = new List<Table>(tables);
             this.GuestList = new List<Person>(guests);
             this.SeatTheGuestsInOrder();
             this.EvaluateFitness();
@@ -68,7 +68,6 @@ namespace WeddingPlanner
         /// <returns>The permutation form.</returns>
         public Person[] ToPermutationForm()
         {
-            int totalSeats = this.Tables.Count * this.Tables[0].NumberOfSeats;
             List<Person> permutation = new List<Person>();
             int emptySeatID = -1;
 
@@ -198,28 +197,7 @@ namespace WeddingPlanner
         /// </summary>
         private void SeatTheGuestsInOrder()
         {
-            // Start by giving every table and ID number
-            for (int i = 0; i < this.Tables.Count; ++i)
-            {
-                Tables[i].Identity = i;
-            }
-
-            int guestIndex = 0;
-            // Go through each table and place each guest
-            for (int i = 0; i < this.Tables.Count; ++i)
-            {
-                var seat = this.Tables[i].FirstSeat;
-                do
-                {
-                    seat.Occupant = this.GuestList[guestIndex];
-                    this.GuestList[guestIndex].TableSeated = this.Tables[i];
-
-                    // increment
-                    guestIndex++;
-                    seat = seat.NextSeat;
-                }
-                while (!object.ReferenceEquals(seat, this.Tables[i].FirstSeat));
-            }
+            
 
 
 
@@ -228,7 +206,8 @@ namespace WeddingPlanner
 
 
 
-            /*
+
+
             int guestIndex = 0;
             // Start by giving every table and ID number
             for (int i = 0; i < this.Tables.Count; ++i)
@@ -236,7 +215,7 @@ namespace WeddingPlanner
                 this.Tables[i].Identity = i;
                 var seat = this.Tables[i].FirstSeat.NextSeat;
                 this.Tables[i].FirstSeat.Occupant = this.GuestList[guestIndex];
-                //this.GuestList[guestIndex].TableSeated = this.Tables[i];
+                this.GuestList[guestIndex].TableSeated = this.Tables[i];
                 guestIndex++;
 
                 while (!object.ReferenceEquals(seat, this.Tables[i].FirstSeat) && guestIndex < this.GuestList.Count)
@@ -247,7 +226,8 @@ namespace WeddingPlanner
                     seat = seat.NextSeat;
                 }
             }
-            */
+
+
         }
     }
 }

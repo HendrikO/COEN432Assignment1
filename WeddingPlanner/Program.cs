@@ -35,11 +35,6 @@ namespace WeddingPlanner
             StartEvolution(ref population);
 
             var pop = population;
-
-            foreach (var guest in population[0].GuestList)
-            {
-                Console.WriteLine(string.Format("Guest ID: {0}\tTable ID: {1}\tSeat ID: {2}", guest.Identity, guest.TableSeated.Identity, 0));
-            }
         }
 
         /// <summary>

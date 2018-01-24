@@ -87,6 +87,17 @@ namespace WeddingPlanner
             guest.TableSeated = this;
         }
 
+        public void SitGuestNextAvailableSeat(Person guest)
+        {
+            var seat = this.FirstSeat;
+            if (seat.Occupant == null)
+            {
+                seat.Occupant = guest;
+                guest.TableSeated = this;
+            }
+            seat = seat.NextSeat;
+        }
+
         /// <summary>
         /// Ises the next to.
         /// </summary>

@@ -50,7 +50,7 @@ namespace WeddingPlanner
         {
             // Parent selection
             // TODO: Use a constant instead of a hard coded value
-            this.ParentSelection(population, out List<SeatingConfiguration> parents, 5);
+            this.ParentSelection(population, out List<SeatingConfiguration> parents, 20);
 
             // Create children
             this.GenerateChildren(parents, out List<SeatingConfiguration> children);
@@ -69,17 +69,29 @@ namespace WeddingPlanner
         {
             parents = new List<SeatingConfiguration>();
 
-            // Sort the list based on fitness ranking
-            population = population.OrderBy(x => x.Fitness).ToList();
+            // TournamentSelection
+            Random randomIndex = new Random();
 
-            // Parents are the picked based on absolute fitness
-            for (int i = 0; i < numParents - 2; ++i)
+            for (int i = 0; i < numParents; ++i)
             {
-                parents.Add(population[i]);
-            }
+                // Pick 3 out of the population at random
+                int i0 = randomIndex.Next(population.Count);
+                int i1 = randomIndex.Next(population.Count);
+                int i2 = randomIndex.Next(population.Count);
 
-            parents.Add(population[population.Count - 1]);
-            parents.Add(population[population.Count - 2]);
+                // Find out which one has the highest fitness
+                List<SeatingConfiguration> tournamentChosen = new List<SeatingConfiguration>
+                {
+                    population[i0],
+                    population[i1],
+                    population[i2]
+                };
+
+                tournamentChosen = tournamentChosen.OrderBy(x => x.Fitness).ToList();
+
+                // Add winner to parents
+                parents.Add(tournamentChosen[0]);
+            }
         }
 
         /// <summary>
@@ -91,9 +103,9 @@ namespace WeddingPlanner
         {
             children = new List<SeatingConfiguration>();
 
-            for (int i = 0; i < parents.Count / 2; ++i)
+            for (int i = 0; i < parents.Count - 1; ++i)
             {
-                this.BreedParents(parents[i], parents[parents.Count - 1 - i],
+                this.BreedParents(parents[i], parents[i + 1],
                                   out SeatingConfiguration firstChild,
                                   out SeatingConfiguration secondChild);
                 children.Add(firstChild);
@@ -183,6 +195,7 @@ namespace WeddingPlanner
             for (int i = 0; i < swathSize; ++i)
             {
                 child[index] = mother[index];
+                child[index].TableSeated = null;
                 index++;
 
                 if (index == arraySize)
@@ -200,6 +213,7 @@ namespace WeddingPlanner
                 if (!GeneticAlgorithm.DoesContainAllele(child, father[fatherIndex]))
                 {
                     child[index] = father[fatherIndex];
+                    child[index].TableSeated = null;
                     index++;
                     fatherIndex++;
                     allelesLeft--;
@@ -242,7 +256,6 @@ namespace WeddingPlanner
         private void SwapMutation(Person[] child)
         {
             //TODO: Currently hardcoded to swap 2 pairs, should be a percentage of permutation size
-
             int index1 = randomSeat.Next(child.Length);
             int index2 = randomSeat.Next(child.Length);
             int index3 = randomSeat.Next(child.Length);
