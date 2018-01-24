@@ -28,31 +28,18 @@ namespace WeddingPlanner
             InitializeParameters();
 
             // Create Population
-            InitializePopulation(5, out List<SeatingConfiguration> population);
+            // TODO: use a constant instead of a hardcoded value
+            InitializePopulation(20, out List<SeatingConfiguration> population);
 
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
+            // Start the algorithm
+            StartEvolution(ref population);
 
-            int bestFitnessAchieved = population[0].Fitness;
-            while (bestFitnessAchieved != 0)
+            var pop = population;
+
+            foreach (var guest in population[0].GuestList)
             {
-                GeneticAlgorithm.Instance.NextGeneration(ref population);
-                if (population[0].Fitness < bestFitnessAchieved)
-                {
-                    bestFitnessAchieved = population[0].Fitness;
-                }
+                Console.WriteLine(string.Format("Guest ID: {0}\tTable ID: {1}\tSeat ID: {2}", guest.Identity, guest.TableSeated.Identity, 0));
             }
-
-            stopWatch.Stop();
-            // Get the elapsed time as a TimeSpan value.
-            TimeSpan ts = stopWatch.Elapsed;
-
-            // Format and display the TimeSpan value.
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                ts.Hours, ts.Minutes, ts.Seconds,
-                ts.Milliseconds / 10);
-            Console.WriteLine("Complete! ");
-            Console.WriteLine("RunTime " + elapsedTime + Environment.NewLine);
         }
 
         /// <summary>
@@ -156,6 +143,53 @@ namespace WeddingPlanner
                 // Add it to the population
                 configs.Add(config);
             }
+        }
+
+        /// <summary>
+        /// Starts the evolution.
+        /// </summary>
+        private static void StartEvolution(ref List<SeatingConfiguration> population)
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+
+            int bestFitnessAchieved = population[0].Fitness;
+            int generation = 0;
+
+            Console.WriteLine(string.Format("Generation: {0} fitness: {1}", generation, bestFitnessAchieved));
+
+            while (bestFitnessAchieved != 0)
+            {
+                GeneticAlgorithm.Instance.NextGeneration(ref population);
+                generation++;
+                /*
+                Console.WriteLine("New Generation");
+                foreach (var guest in population[0].GuestList)
+                {
+                    Console.WriteLine(string.Format("Guest ID: {0}\tTable ID: {1}\tSeat ID: {2}", guest.Identity, guest.TableSeated.Identity, 0));
+                }
+                */
+                if (population[0].Fitness < bestFitnessAchieved)
+                {
+                    bestFitnessAchieved = population[0].Fitness;
+                    Console.WriteLine(string.Format("Generation: {0} fitness: {1}", generation, bestFitnessAchieved));
+                    foreach (var guest in population[0].GuestList)
+                    {
+                        Console.WriteLine(string.Format("Guest ID: {0}\tTable ID: {1}\tSeat ID: {2}", guest.Identity, guest.TableSeated.Identity, 0));
+                    }
+                }
+            }
+
+            stopWatch.Stop();
+            // Get the elapsed time as a TimeSpan value.
+            TimeSpan ts = stopWatch.Elapsed;
+
+            // Format and display the TimeSpan value.
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            Console.WriteLine("Complete! ");
+            Console.WriteLine("RunTime " + elapsedTime + Environment.NewLine);
         }
     }
 }

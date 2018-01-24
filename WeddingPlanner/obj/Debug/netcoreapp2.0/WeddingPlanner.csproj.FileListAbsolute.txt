@@ -1,11 +1,11 @@
-/Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/obj/Debug/netcoreapp2.0/WeddingPlanner.csprojResolveAssemblyReference.cache
-/Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/obj/Debug/netcoreapp2.0/WeddingPlanner.csproj.CoreCompileInputs.cache
-/Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/obj/Debug/netcoreapp2.0/WeddingPlanner.AssemblyInfoInputs.cache
-/Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/obj/Debug/netcoreapp2.0/WeddingPlanner.AssemblyInfo.cs
 /Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/bin/Debug/netcoreapp2.0/WeddingPlanner.deps.json
 /Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/bin/Debug/netcoreapp2.0/WeddingPlanner.runtimeconfig.json
 /Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/bin/Debug/netcoreapp2.0/WeddingPlanner.runtimeconfig.dev.json
 /Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/bin/Debug/netcoreapp2.0/WeddingPlanner.dll
 /Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/bin/Debug/netcoreapp2.0/WeddingPlanner.pdb
+/Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/obj/Debug/netcoreapp2.0/WeddingPlanner.csprojResolveAssemblyReference.cache
+/Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/obj/Debug/netcoreapp2.0/WeddingPlanner.csproj.CoreCompileInputs.cache
+/Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/obj/Debug/netcoreapp2.0/WeddingPlanner.AssemblyInfoInputs.cache
+/Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/obj/Debug/netcoreapp2.0/WeddingPlanner.AssemblyInfo.cs
 /Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/obj/Debug/netcoreapp2.0/WeddingPlanner.dll
 /Users/hendrikoosenbrug/Developer/COEN432Assignment1/WeddingPlanner/obj/Debug/netcoreapp2.0/WeddingPlanner.pdb

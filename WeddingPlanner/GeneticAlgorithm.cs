@@ -48,19 +48,80 @@ namespace WeddingPlanner
         /// <param name="population">Population.</param>
         public void NextGeneration(ref List<SeatingConfiguration> population)
         {
-            // Sort the list
+            // Parent selection
+            // TODO: Use a constant instead of a hard coded value
+            this.ParentSelection(population, out List<SeatingConfiguration> parents, 5);
+
+            // Create children
+            this.GenerateChildren(parents, out List<SeatingConfiguration> children);
+
+            // Survival selection
+            this.SurvivalSelection(ref population, children);
+        }
+
+        /// <summary>
+        /// Parents the selection.
+        /// </summary>
+        /// <param name="population">Population.</param>
+        /// <param name="parents">Parents.</param>
+        /// <param name="numParents">Number parents.</param>
+        private void ParentSelection(List<SeatingConfiguration> population, out List<SeatingConfiguration> parents, int numParents)
+        {
+            parents = new List<SeatingConfiguration>();
+
+            // Sort the list based on fitness ranking
             population = population.OrderBy(x => x.Fitness).ToList();
 
-            // Cross Selection with 2 fittest as parents
-            this.BreedParents(population[0], population[1], out SeatingConfiguration firstChild, out SeatingConfiguration secondChild);
+            // Parents are the picked based on absolute fitness
+            for (int i = 0; i < numParents - 2; ++i)
+            {
+                parents.Add(population[i]);
+            }
 
+            parents.Add(population[population.Count - 1]);
+            parents.Add(population[population.Count - 2]);
+        }
 
-            // New population has the 5 fittests configs out of the current 7
-            population.Add(firstChild);
-            population.Add(secondChild);
+        /// <summary>
+        /// Generates the children.
+        /// </summary>
+        /// <param name="parents">Parents.</param>
+        /// <param name="children">Children.</param>
+        private void GenerateChildren(List<SeatingConfiguration> parents, out List<SeatingConfiguration> children)
+        {
+            children = new List<SeatingConfiguration>();
+
+            for (int i = 0; i < parents.Count / 2; ++i)
+            {
+                this.BreedParents(parents[i], parents[parents.Count - 1 - i],
+                                  out SeatingConfiguration firstChild,
+                                  out SeatingConfiguration secondChild);
+                children.Add(firstChild);
+                children.Add(secondChild);
+            }
+        }
+
+        /// <summary>
+        /// Survivals the selection.
+        /// </summary>
+        /// <param name="population">Population.</param>
+        /// <param name="children">Number new children.</param>
+        private void SurvivalSelection(ref List<SeatingConfiguration> population, List<SeatingConfiguration> children)
+        {
+            // Add children to the pool
+            foreach (var child in children)
+            {
+                population.Add(child);
+            }
+
+            // Order the population based on absolute rank
             population = population.OrderBy(x => x.Fitness).ToList();
-            population.RemoveAt(population.Count - 1);
-            population.RemoveAt(population.Count - 1);
+
+            // Remove same amount as added
+            for (int i = 0; i < children.Count; ++i)
+            {
+                population.RemoveAt(population.Count - 1);
+            }
         }
 
         /// <summary>
@@ -180,10 +241,13 @@ namespace WeddingPlanner
         /// <param name="child">Child.</param>
         private void SwapMutation(Person[] child)
         {
+            //TODO: Currently hardcoded to swap 2 pairs, should be a percentage of permutation size
+
             int index1 = randomSeat.Next(child.Length);
             int index2 = randomSeat.Next(child.Length);
             int index3 = randomSeat.Next(child.Length);
             int index4 = randomSeat.Next(child.Length);
+
 
             var temp = child[index1];
             child[index1] = child[index2];

@@ -3,6 +3,9 @@ namespace WeddingPlanner
 {
     public class Table
     {
+        /// <summary>
+        /// The random seat.
+        /// </summary>
         private static Random randomSeat = new Random();
 
         /// <summary>
@@ -188,6 +191,10 @@ namespace WeddingPlanner
         /// </summary>
         public class Seat
         {
+            /// <summary>
+            /// Gets or sets the seat identifier.
+            /// </summary>
+            /// <value>The seat identifier.</value>
             public int SeatID { get; set; }
 
             /// <summary>

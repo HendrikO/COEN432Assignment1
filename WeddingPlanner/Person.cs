@@ -19,6 +19,10 @@ namespace WeddingPlanner
         /// <value>The relationships.</value>
         public List<KeyValuePair<int,int>> Relationships { get; set; }
 
+        /// <summary>
+        /// Gets or sets the table seated.
+        /// </summary>
+        /// <value>The table seated.</value>
         public Table TableSeated { get; set; }
 
         /// <summary>
