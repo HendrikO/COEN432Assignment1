@@ -50,7 +50,7 @@ namespace WeddingPlanner
         {
             // Parent selection
             // TODO: Use a constant instead of a hard coded value
-            this.ParentSelection(population, out List<SeatingConfiguration> parents, 20);
+            this.ParentSelection(population, out List<SeatingConfiguration> parents, 10);
 
             // Create children
             this.GenerateChildren(parents, out List<SeatingConfiguration> children);
@@ -187,6 +187,10 @@ namespace WeddingPlanner
 
             child = new Person[arraySize];
 
+            // Create the guest list
+            List<Person> guestList = new List<Person>();
+            Program.InitializeGuestList(guestList);
+
             // Choose a random index to start
             int index = randomSeat.Next(arraySize);
             int swathSize = arraySize / 2;
@@ -194,8 +198,7 @@ namespace WeddingPlanner
             // Copy Swath from mother into child
             for (int i = 0; i < swathSize; ++i)
             {
-                child[index] = mother[index];
-                child[index].TableSeated = null;
+                child[index] = this.GetGuest(guestList, mother[index].Identity);
                 index++;
 
                 if (index == arraySize)
@@ -212,8 +215,7 @@ namespace WeddingPlanner
                 // check to see if child does not already contain father allele
                 if (!GeneticAlgorithm.DoesContainAllele(child, father[fatherIndex]))
                 {
-                    child[index] = father[fatherIndex];
-                    child[index].TableSeated = null;
+                    child[index] = this.GetGuest(guestList, father[fatherIndex].Identity);
                     index++;
                     fatherIndex++;
                     allelesLeft--;
@@ -269,6 +271,19 @@ namespace WeddingPlanner
             var temp1 = child[index3];
             child[index3] = child[index4];
             child[index4] = temp1;
+        }
+
+        private Person GetGuest(List<Person> guestList, int id)
+        {
+            foreach (var guest in guestList)
+            {
+                if (guest.Identity == id)
+                {
+                    return guest;
+                }
+            }
+
+            return null;
         }
     }
 }

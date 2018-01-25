@@ -29,7 +29,7 @@ namespace WeddingPlanner
 
             // Create Population
             // TODO: use a constant instead of a hardcoded value
-            InitializePopulation(20, out List<SeatingConfiguration> population);
+            InitializePopulation(50, out List<SeatingConfiguration> population);
 
             // Start the algorithm
             StartEvolution(ref population);
@@ -61,7 +61,7 @@ namespace WeddingPlanner
         /// Initializes the guest list.
         /// </summary>
         /// <param name="guestList">Guest list.</param>
-        private static void InitializeGuestList(List<Person> guestList)
+        public static void InitializeGuestList(List<Person> guestList)
         {
             // Read guests.csv file to get size of table and number of guest
             // Get file path
@@ -94,6 +94,19 @@ namespace WeddingPlanner
                     }
                 }
                 guestList.Add(person);
+            }
+
+            // Add empty seats
+            double numberOfTables = numberOfGuests / tableSize;
+            numberOfTables = Math.Ceiling(numberOfTables);
+            double numEmptySeats = numberOfTables * tableSize - numberOfGuests;
+
+            int emptySeatID = -1;
+            for (int i = 0; i < numEmptySeats; ++i)
+            {
+                Person empty = new Person();
+                empty.Identity = emptySeatID--;
+                guestList.Add(empty);
             }
         }
 
@@ -157,21 +170,13 @@ namespace WeddingPlanner
             {
                 GeneticAlgorithm.Instance.NextGeneration(ref population);
                 generation++;
-                /*
-                Console.WriteLine("New Generation");
-                foreach (var guest in population[0].GuestList)
-                {
-                    Console.WriteLine(string.Format("Guest ID: {0}\tTable ID: {1}\tSeat ID: {2}", guest.Identity, guest.TableSeated.Identity, 0));
-                }
-                */
+
                 if (population[0].Fitness < bestFitnessAchieved)
                 {
                     bestFitnessAchieved = population[0].Fitness;
-                    Console.WriteLine(string.Format("Generation: {0} fitness: {1}", generation, bestFitnessAchieved));
-                    foreach (var guest in population[0].GuestList)
-                    {
-                        Console.WriteLine(string.Format("Guest ID: {0}\tTable ID: {1}\tSeat ID: {2}", guest.Identity, guest.TableSeated.Identity, 0));
-                    }
+                    Console.WriteLine(string.Format("Generation: {0}", generation));
+                    Console.WriteLine(string.Format("Fitness: {0}", bestFitnessAchieved));
+                    population[0].OutputTables();
                 }
             }
 

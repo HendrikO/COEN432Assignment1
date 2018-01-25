@@ -17,7 +17,7 @@ namespace WeddingPlanner
         /// <summary>
         /// The identity.
         /// </summary>
-        public int Identity;
+        //public int Identity;
 
         /// <summary>
         /// Gets or sets the number of seats.
@@ -84,18 +84,6 @@ namespace WeddingPlanner
             } while (seat.Occupant != null);
 
             seat.Occupant = guest;
-            guest.TableSeated = this;
-        }
-
-        public void SitGuestNextAvailableSeat(Person guest)
-        {
-            var seat = this.FirstSeat;
-            if (seat.Occupant == null)
-            {
-                seat.Occupant = guest;
-                guest.TableSeated = this;
-            }
-            seat = seat.NextSeat;
         }
 
         /// <summary>
@@ -104,25 +92,23 @@ namespace WeddingPlanner
         /// <returns><c>true</c>, if next to was ised, <c>false</c> otherwise.</returns>
         /// <param name="guest1">Guest1.</param>
         /// <param name="guest2">Guest2.</param>
-        public bool AreNextTo(Person guest1, Person guest2)
+        public bool AreNextTo(int guest1, int guest2)
         {
-            var seat = this.FirstSeat.NextSeat;
-
-            // First step is to find where guest 1 is sitting
-            while (!object.ReferenceEquals(seat, this.FirstSeat))
+            var seat = this.FirstSeat;
+            do
             {
-                if (object.ReferenceEquals(seat.Occupant, guest1))
+                // find where guest1 is sitting
+                if (seat.Occupant.Identity == guest1)
                 {
-                    // Compare the two seat next to guest 1
-                    if (object.ReferenceEquals(seat.NextSeat.Occupant, guest2) ||
-                       object.ReferenceEquals(seat.PreviousSeat.Occupant, guest2))
+                    if (seat.NextSeat.Occupant.Identity == guest2 ||
+                       seat.PreviousSeat.Occupant.Identity == guest2)
                     {
                         return true;
                     }
                 }
-
                 seat = seat.NextSeat;
             }
+            while (!ReferenceEquals(seat, this.FirstSeat));
 
             return false;
         }
@@ -131,22 +117,20 @@ namespace WeddingPlanner
         /// Ares the same table.
         /// </summary>
         /// <returns><c>true</c>, if same table was ared, <c>false</c> otherwise.</returns>
-        /// <param name="guest1">Guest1.</param>
         /// <param name="guest2">Guest2.</param>
-        public bool AreSameTable(Person guest1, Person guest2)
+        public bool AreSameTable( int guest2)
         {
-            var seat = this.FirstSeat.NextSeat;
-
-            // Search for guest 2
-            while (!object.ReferenceEquals(seat, this.FirstSeat))
+            var seat = this.FirstSeat;
+            do
             {
-                if (object.ReferenceEquals(seat.Occupant, guest2))
+                // find where guest1 is sitting
+                if (seat.Occupant.Identity == guest2)
                 {
                     return true;
                 }
-
                 seat = seat.NextSeat;
             }
+            while (!ReferenceEquals(seat, this.FirstSeat));
 
             return false;
         }

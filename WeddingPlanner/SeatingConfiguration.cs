@@ -106,54 +106,63 @@ namespace WeddingPlanner
         private void EvaluateFitness()
         {
             int penalty = 0;
-            foreach (var guest1 in this.GuestList)
+
+            for (int i = 0; i < this.GuestList.Count; ++i)
             {
-                Table tableOfGuest1 = guest1.TableSeated;
-                foreach (var guest2 in this.GuestList)
+                int currentGuestID = this.GuestList[i].Identity;
+                Table guestTable = this.GetTableOfGuest(currentGuestID);
+
+                for (int j = 0; j < this.GuestList.Count; ++j)
                 {
-                    if (!Object.ReferenceEquals(guest1,guest2) && guest1.Identity > 0 && guest2.Identity > 0)
+                    int comparedGuestID = this.GuestList[j].Identity;
+
+                    // stop if same guest or if one guest is an empty seat
+                    if (currentGuestID != comparedGuestID && 
+                        !(currentGuestID < 0) &&
+                        !(comparedGuestID < 0))
                     {
-                        int relationshipValue = guest1.GetRelationshipValue(guest2.Identity);
+                        int relationshipValue = GuestList[i].GetRelationshipValue(comparedGuestID);
 
                         switch (relationshipValue)
                         {
+                            
                             case 1:
-                                if (tableOfGuest1.AreNextTo(guest1, guest2))
+                                if (guestTable.AreNextTo(currentGuestID, comparedGuestID))
                                 {
                                     penalty += 15;
                                 }
                                 else
                                 {
-                                    if (tableOfGuest1.AreSameTable(guest1, guest2))
+                                    if (guestTable.AreSameTable(comparedGuestID))
                                     {
                                         penalty += 10;
                                     }
                                 }
                                 break;
                             case 2:
-                                if (tableOfGuest1.AreNextTo(guest1, guest2))
+                                if (guestTable.AreNextTo(currentGuestID, comparedGuestID))
                                 {
-                                        penalty += 15;
+                                    penalty += 15;
                                 }
                                 break;
                             case 3:
                                 break;
                             case 4:
-                                if (!tableOfGuest1.AreSameTable(guest1, guest2))
+                                if (!guestTable.AreSameTable(comparedGuestID))
                                 {
                                     penalty += 10;
                                 }
                                 break;
                             case 5:
-                                if (!tableOfGuest1.AreNextTo(guest1, guest2) && tableOfGuest1.AreSameTable(guest1, guest2))
+                                if (!guestTable.AreSameTable(comparedGuestID))
                                 {
-                                    penalty += 15;
+                                    penalty += 20;
                                 }
                                 else
                                 {
-                                    if (!tableOfGuest1.AreNextTo(guest1, guest2) && !tableOfGuest1.AreSameTable(guest1, guest2))
+                                    if (!guestTable.AreNextTo(currentGuestID, comparedGuestID))
                                     {
-                                        penalty += 20;
+                                        penalty += 15;
                                     }
                                 }
                                 break;
@@ -168,16 +177,36 @@ namespace WeddingPlanner
         }
 
         /// <summary>
+        /// Gets the table of guest.
+        /// </summary>
+        /// <returns>The table of guest.</returns>
+        /// <param name="guestID">Guest identifier.</param>
+        private Table GetTableOfGuest(int guestID)
+        {
+            Table table = null;
+
+            for (int i = 0; i < this.Tables.Count; ++i)
+            {
+                var seat = this.Tables[i].FirstSeat;
+                do
+                {
+                    if (seat.Occupant.Identity == guestID)
+                    {
+                        table = this.Tables[i];
+                    }
+                    seat = seat.NextSeat;
+                }
+                while (!ReferenceEquals(seat, this.Tables[i].FirstSeat));
+            }
+
+            return table;
+        }
+
+        /// <summary>
         /// Seats the guests.
         /// </summary>
         private void SeatTheGuests()
         {
-            // Start by giving every table and ID number
-            for (int i = 0; i < this.Tables.Count; ++i)
-            {
-                Tables[i].Identity = i;
-            }
-
             // Go through the list and place guests randomly
             foreach (var guest in GuestList)
             {
@@ -197,37 +226,43 @@ namespace WeddingPlanner
         /// </summary>
         private void SeatTheGuestsInOrder()
         {
-            
-
-
-
-
-
-
-
-
-
-
             int guestIndex = 0;
             // Start by giving every table and ID number
             for (int i = 0; i < this.Tables.Count; ++i)
             {
-                this.Tables[i].Identity = i;
                 var seat = this.Tables[i].FirstSeat.NextSeat;
                 this.Tables[i].FirstSeat.Occupant = this.GuestList[guestIndex];
-                this.GuestList[guestIndex].TableSeated = this.Tables[i];
                 guestIndex++;
 
                 while (!object.ReferenceEquals(seat, this.Tables[i].FirstSeat) && guestIndex < this.GuestList.Count)
                 {
                     seat.Occupant = this.GuestList[guestIndex];
-                    this.GuestList[guestIndex].TableSeated = this.Tables[i];
                     guestIndex++;
                     seat = seat.NextSeat;
                 }
             }
+        }
 
+        /// <summary>
+        /// Outputs the tables.
+        /// </summary>
+        public void OutputTables()
+        {
+            string guestIDs = string.Empty;
 
+            Console.WriteLine("Each line represents a table:");
+            foreach (var table in this.Tables)
+            {
+                var seat = table.FirstSeat;
+                do
+                {
+                    guestIDs = guestIDs + seat.Occupant.Identity + " ";
+                    seat = seat.NextSeat;
+                }
+                while (!ReferenceEquals(seat, table.FirstSeat));
+                Console.WriteLine(guestIDs);
+                guestIDs = string.Empty;
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ namespace WeddingPlanner
         /// Gets or sets the table seated.
         /// </summary>
         /// <value>The table seated.</value>
-        public Table TableSeated { get; set; }
+        //public Table TableSeated { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:WeddingPlanner.Person"/> class.
