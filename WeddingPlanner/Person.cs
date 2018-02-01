@@ -20,12 +20,6 @@ namespace WeddingPlanner
         public List<KeyValuePair<int,int>> Relationships { get; set; }
 
         /// <summary>
-        /// Gets or sets the table seated.
-        /// </summary>
-        /// <value>The table seated.</value>
-        //public Table TableSeated { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="T:WeddingPlanner.Person"/> class.
         /// </summary>
         public Person()

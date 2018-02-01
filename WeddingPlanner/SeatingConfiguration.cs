@@ -181,7 +181,7 @@ namespace WeddingPlanner
         /// </summary>
         /// <returns>The table of guest.</returns>
         /// <param name="guestID">Guest identifier.</param>
-        private Table GetTableOfGuest(int guestID)
+        public Table GetTableOfGuest(int guestID)
         {
             Table table = null;
 

@@ -32,9 +32,33 @@ namespace WeddingPlanner
             InitializePopulation(50, out List<SeatingConfiguration> population);
 
             // Start the algorithm
-            StartEvolution(ref population);
+            StartEvolution(ref population, false);
+            int diversity = 0;
+            for (int i = 0; i < 50; ++i)
+            {
+                for (int j = i + 1; j < 50; ++j)
+                {
+                    diversity = diversity + GeneticAlgorithm.Instance.MeasureDiversity(population[i], population[j]);
+                }
+            }
 
-            var pop = population;
+            // Create Population
+            // TODO: use a constant instead of a hardcoded value
+            InitializePopulation(50, out List<SeatingConfiguration> populationDiverse);
+
+            // Start the algorithm
+            StartEvolution(ref populationDiverse, true);
+            int diversityEnhanced = 0;
+            for (int i = 0; i < 50; ++i)
+            {
+                for (int j = i + 1; j < 50; ++j)
+                {
+                    diversityEnhanced = diversityEnhanced + GeneticAlgorithm.Instance.MeasureDiversity(populationDiverse[i], populationDiverse[j]);
+                }
+            }
+
+            Console.WriteLine(string.Format("Diversity no enhancement: {0}", diversity));
+            Console.WriteLine(string.Format("Diversity with enhancement: {0}", diversityEnhanced));
         }
 
         /// <summary>
@@ -156,7 +180,7 @@ namespace WeddingPlanner
         /// <summary>
         /// Starts the evolution.
         /// </summary>
-        private static void StartEvolution(ref List<SeatingConfiguration> population)
+        private static void StartEvolution(ref List<SeatingConfiguration> population, bool isDiversityEnhanced)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -168,7 +192,15 @@ namespace WeddingPlanner
 
             while (bestFitnessAchieved != 0)
             {
-                GeneticAlgorithm.Instance.NextGeneration(ref population);
+                if (isDiversityEnhanced)
+                {
+                    GeneticAlgorithm.Instance.NextGenerationDiversityPreservation(ref population);
+                }
+                else
+                {
+                    GeneticAlgorithm.Instance.NextGeneration(ref population);    
+                }
+
                 generation++;
 
                 if (population[0].Fitness < bestFitnessAchieved)
@@ -176,7 +208,7 @@ namespace WeddingPlanner
                     bestFitnessAchieved = population[0].Fitness;
                     Console.WriteLine(string.Format("Generation: {0}", generation));
                     Console.WriteLine(string.Format("Fitness: {0}", bestFitnessAchieved));
-                    population[0].OutputTables();
+                    //population[0].OutputTables();
                 }
             }
 

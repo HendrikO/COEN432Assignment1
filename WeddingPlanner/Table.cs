@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace WeddingPlanner
 {
     public class Table
@@ -13,11 +15,6 @@ namespace WeddingPlanner
         /// </summary>
         /// <value>The first seat.</value>
         public Seat FirstSeat { get; set; }
-
-        /// <summary>
-        /// The identity.
-        /// </summary>
-        //public int Identity;
 
         /// <summary>
         /// Gets or sets the number of seats.
@@ -41,7 +38,6 @@ namespace WeddingPlanner
         public Table(int numberOfSeats)
         {
             this.NumberOfSeats = numberOfSeats;
-            //this.FirstSeat = new Seat();
             this.InitializeTable();
         }
 
@@ -179,6 +175,117 @@ namespace WeddingPlanner
                     newSeat.NextSeat = temp;
                 }
             }
+        }
+
+        /// <summary>
+        /// Ises the guest sitting.
+        /// </summary>
+        /// <returns><c>true</c>, if guest sitting was ised, <c>false</c> otherwise.</returns>
+        /// <param name="guestID">Guest identifier.</param>
+        public bool IsGuestSitting(int guestID)
+        {
+            var seat = this.FirstSeat;
+            do
+            {
+                // find where guest1 is sitting
+                if (seat.Occupant.Identity == guestID)
+                {
+                    return true;
+                }
+                seat = seat.NextSeat;
+            }
+            while (!ReferenceEquals(seat, this.FirstSeat));
+
+            return false;
+        }
+
+        /// <summary>
+        /// Identifiers the of next guest.
+        /// </summary>
+        /// <returns>The of next guest.</returns>
+        /// <param name="guestID">Guest identifier.</param>
+        public int IdOfNextGuest(int guestID)
+        {
+            int nextGuestID = 0;
+
+            var seat = this.FirstSeat;
+            do
+            {
+                // find where guest1 is sitting
+                if (seat.Occupant.Identity == guestID)
+                {
+                    nextGuestID = seat.NextSeat.Occupant.Identity;
+                }
+                seat = seat.NextSeat;
+            }
+            while (!ReferenceEquals(seat, this.FirstSeat));
+
+            return nextGuestID;
+        }
+
+        /// <summary>
+        /// Identifiers the of previous guest.
+        /// </summary>
+        /// <returns>The of previous guest.</returns>
+        /// <param name="guestID">Guest identifier.</param>
+        public int IdOfPreviousGuest(int guestID)
+        {
+            int previousGuestID = 0;
+
+            var seat = this.FirstSeat;
+            do
+            {
+                // find where guest1 is sitting
+                if (seat.Occupant.Identity == guestID)
+                {
+                    previousGuestID = seat.PreviousSeat.Occupant.Identity;
+                }
+                seat = seat.NextSeat;
+            }
+            while (!ReferenceEquals(seat, this.FirstSeat));
+
+            return previousGuestID;
+        }
+
+        /// <summary>
+        /// Gets the identifiers of sitting guests.
+        /// </summary>
+        /// <returns>The identifiers of sitting guests.</returns>
+        public List<int> GetIdsOfSittingGuests()
+        {
+            List<int> ids = new List<int>();
+
+            var seat = this.FirstSeat;
+            do
+            {
+                ids.Add(seat.Occupant.Identity);
+                seat = seat.NextSeat;
+            }
+            while (!ReferenceEquals(seat, this.FirstSeat));
+
+            return ids;
+        }
+
+        /// <summary>
+        /// Gets the number of empty seats.
+        /// </summary>
+        /// <returns>The number of empty seats.</returns>
+        public int GetNumberOfEmptySeats()
+        {
+            int numEmpty = 0;
+
+            var seat = this.FirstSeat;
+            do
+            {
+                if (seat.Occupant.Identity < 0)
+                {
+                    numEmpty++;
+                }
+                seat = seat.NextSeat;
+            }
+            while (!ReferenceEquals(seat, this.FirstSeat));
+
+            return numEmpty;
         }
 
         /// <summary>
