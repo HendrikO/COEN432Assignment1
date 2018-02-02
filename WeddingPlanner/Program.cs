@@ -28,37 +28,38 @@ namespace WeddingPlanner
             InitializeParameters();
 
             // Create Population
-            // TODO: use a constant instead of a hardcoded value
-            InitializePopulation(50, out List<SeatingConfiguration> population);
+            InitializePopulation(20, out List<SeatingConfiguration> population);
 
             // Start the algorithm
             StartEvolution(ref population, false);
+
+            // Create Population
+            InitializePopulation(20, out List<SeatingConfiguration> populationDiverse);
+
+            // Start the algorithm
+            StartEvolution(ref populationDiverse, true);
+
+            Console.WriteLine(string.Format("Diversity no enhancement: {0}", CalculateDiversity(population)));
+            Console.WriteLine(string.Format("Diversity with enhancement: {0}", CalculateDiversity(populationDiverse)));
+        }
+
+        /// <summary>
+        /// Calculates the diversity.
+        /// </summary>
+        /// <returns>The diversity.</returns>
+        /// <param name="population">Population.</param>
+        private static int CalculateDiversity(List<SeatingConfiguration> population)
+        {
             int diversity = 0;
-            for (int i = 0; i < 50; ++i)
+            for (int i = 0; i < 5; ++i)
             {
-                for (int j = i + 1; j < 50; ++j)
+                for (int j = i + 1; j < 5; ++j)
                 {
                     diversity = diversity + GeneticAlgorithm.Instance.MeasureDiversity(population[i], population[j]);
                 }
             }
 
-            // Create Population
-            // TODO: use a constant instead of a hardcoded value
-            InitializePopulation(50, out List<SeatingConfiguration> populationDiverse);
-
-            // Start the algorithm
-            StartEvolution(ref populationDiverse, true);
-            int diversityEnhanced = 0;
-            for (int i = 0; i < 50; ++i)
-            {
-                for (int j = i + 1; j < 50; ++j)
-                {
-                    diversityEnhanced = diversityEnhanced + GeneticAlgorithm.Instance.MeasureDiversity(populationDiverse[i], populationDiverse[j]);
-                }
-            }
-
-            Console.WriteLine(string.Format("Diversity no enhancement: {0}", diversity));
-            Console.WriteLine(string.Format("Diversity with enhancement: {0}", diversityEnhanced));
+            return diversity;
         }
 
         /// <summary>
@@ -187,10 +188,11 @@ namespace WeddingPlanner
 
             int bestFitnessAchieved = population[0].Fitness;
             int generation = 0;
+            int iterations = 0;
 
             Console.WriteLine(string.Format("Generation: {0} fitness: {1}", generation, bestFitnessAchieved));
 
-            while (bestFitnessAchieved != 0)
+            while (bestFitnessAchieved != 0 || iterations == 5000)
             {
                 if (isDiversityEnhanced)
                 {
@@ -202,13 +204,14 @@ namespace WeddingPlanner
                 }
 
                 generation++;
+                iterations++;
 
                 if (population[0].Fitness < bestFitnessAchieved)
                 {
                     bestFitnessAchieved = population[0].Fitness;
+                    iterations = 0;
                     Console.WriteLine(string.Format("Generation: {0}", generation));
                     Console.WriteLine(string.Format("Fitness: {0}", bestFitnessAchieved));
-                    //population[0].OutputTables();
                 }
             }
 

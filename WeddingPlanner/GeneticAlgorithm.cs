@@ -50,7 +50,7 @@ namespace WeddingPlanner
         {
             // Parent selection
             // TODO: Use a constant instead of a hard coded value
-            this.ParentSelection(population, out List<SeatingConfiguration> parents, 10);
+            this.ParentSelection(population, out List<SeatingConfiguration> parents, 6);
 
             // Create children
             this.GenerateChildren(parents, out List<SeatingConfiguration> children);
@@ -66,7 +66,7 @@ namespace WeddingPlanner
         public void NextGenerationDiversityPreservation(ref List<SeatingConfiguration> population)
         {
             // Select parents
-            this.ParentSelection(population, out List<SeatingConfiguration> parents, 10);
+            this.ParentSelection(population, out List<SeatingConfiguration> parents, 6);
 
             // Generate children and survival selection in one
             this.CrowdingDiversity(ref population, parents);
